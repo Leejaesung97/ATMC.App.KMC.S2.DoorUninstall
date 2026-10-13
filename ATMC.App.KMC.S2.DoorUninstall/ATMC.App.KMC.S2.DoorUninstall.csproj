@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D729E42B-50F0-4893-A613-2DDF9493DFF2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ATMC.App.KMC.S2.DoorUninstall</RootNamespace>
+    <AssemblyName>ATMC.App.KMC.S2.DoorUninstall</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>C:\LotusAPI\bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\..\..\LotusAPI\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ATMCApp.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Abeo.Controls, Version=1.21.1020.633, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\Abeo.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ATMC.Common, Version=1.22.704.638, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\ATMC.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Controls, Version=1.0.2103.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Data, Version=1.0.2103.3, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.HW, Version=1.0.2103.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.HW.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.HW.FujiPLC, Version=1.22.819.411, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.HW.FujiPLC.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.HW.OpcPlc, Version=1.22.822.627, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.HW.OpcPlc.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Robotics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Robotics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Robotics.Fanuc, Version=1.22.610.953, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Robotics.Fanuc.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Robotics.HRLib, Version=1.0.8023.24466, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Robotics.HRLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Settings, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Settings.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Sim, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Sim.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LotusAPI.Utils, Version=1.0.2103.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\LotusAPI.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpGL, Version=3.21.1202.159, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\SharpGL.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpGL.WinForms, Version=3.21.1202.234, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\LotusAPI\bin\SharpGL.WinForms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppConfig.cs" />
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Global.cs" />
+    <Compile Include="ModelConfig.cs" />
+    <Compile Include="DB.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Result.cs" />
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ATMCApp.ico" />
+    <None Include="Resources\diagram.png" />
+    <None Include="Resources\tire_uf.png" />
+    <None Include="Resources\robot_24px.png" />
+    <None Include="Resources\sunroof.png" />
+    <None Include="Resources\atmc.png" />
+    <None Include="Resources\atmc_logo_128.png" />
+    <None Include="Resources\atmc_x2.png" />
+    <None Include="Resources\win_resize_241.png" />
+    <None Include="Resources\user_241.png" />
+    <None Include="Resources\up_241.png" />
+    <None Include="Resources\topmost_241.png" />
+    <None Include="Resources\stop_playing_241.png" />
+    <None Include="Resources\setting_241.png" />
+    <None Include="Resources\save_241.png" />
+    <None Include="Resources\run_24_11.png" />
+    <None Include="Resources\run_241.png" />
+    <None Include="Resources\right_241.png" />
+    <None Include="Resources\reset_241.png" />
+    <None Include="Resources\replace_241.png" />
+    <None Include="Resources\plus_241.png" />
+    <None Include="Resources\play_241.png" />
+    <None Include="Resources\pie_241.png" />
+    <None Include="Resources\pause_241.png" />
+    <None Include="Resources\paste_241.png" />
+    <None Include="Resources\password_241.png" />
+    <None Include="Resources\ok_241.png" />
+    <None Include="Resources\normal_size_241.png" />
+    <None Include="Resources\model_241.png" />
+    <None Include="Resources\minus_241.png" />
+    <None Include="Resources\maximize_241.png" />
+    <None Include="Resources\manual_241.png" />
+    <None Include="Resources\log_241.png" />
+    <None Include="Resources\load_241.png" />
+    <None Include="Resources\left_241.png" />
+    <None Include="Resources\import_241.png" />
+    <None Include="Resources\image_241.png" />
+    <None Include="Resources\hwcard_241.png" />
+    <None Include="Resources\home_241.png" />
+    <None Include="Resources\help_241.png" />
+    <None Include="Resources\generic_icon_241.png" />
+    <None Include="Resources\folder_241.png" />
+    <None Include="Resources\file_241.png" />
+    <None Include="Resources\fast_fwd_241.png" />
+    <None Include="Resources\fast_bwd_241.png" />
+    <None Include="Resources\export_plane_24.png" />
+    <None Include="Resources\export_241.png" />
+    <None Include="Resources\estimate_plane_24.png" />
+    <None Include="Resources\edit_241.png" />
+    <None Include="Resources\down_241.png" />
+    <None Include="Resources\db_241.png" />
+    <None Include="Resources\cut_241.png" />
+    <None Include="Resources\cpk3_241.png" />
+    <None Include="Resources\cpk2_24.png" />
+    <None Include="Resources\copy_241.png" />
+    <None Include="Resources\close_241.png" />
+    <None Include="Resources\clipboard_241.png" />
+    <None Include="Resources\clear_241.png" />
+    <None Include="Resources\chart_241.png" />
+    <None Include="Resources\cancel_241.png" />
+    <None Include="Resources\camera_241.png" />
+    <None Include="Resources\cpk3_24.png" />
+    <None Include="Resources\atmc_x0.png" />
+    <None Include="Resources\db_24.png" />
+    <None Include="Resources\chart_24.png" />
+    <None Include="Resources\maximize_24.png" />
+    <None Include="Resources\setting_24.png" />
+    <None Include="Resources\close_24.png" />
+    <None Include="Resources\minus_24.png" />
+    <None Include="Resources\topmost_24.png" />
+    <None Include="Resources\plus_24.png" />
+    <None Include="Resources\home_24.png" />
+    <None Include="Resources\log_24.png" />
+    <None Include="Resources\camera_24.png" />
+    <None Include="Resources\generic_icon_24.png" />
+    <None Include="Resources\folder_24.png" />
+    <None Include="Resources\hwcard_24.png" />
+    <None Include="Resources\load_24.png" />
+    <None Include="Resources\save_24.png" />
+    <None Include="Resources\user_24.png" />
+    <None Include="Resources\password_24.png" />
+    <None Include="Resources\model_24.png" />
+    <None Include="Resources\image_24.png" />
+    <None Include="Resources\export_24.png" />
+    <None Include="Resources\clear_24.png" />
+    <None Include="Resources\file_24.png" />
+    <None Include="Resources\edit_24.png" />
+    <None Include="Resources\import_24.png" />
+    <None Include="Resources\down_24.png" />
+    <None Include="Resources\up_24.png" />
+    <None Include="Resources\left_24.png" />
+    <None Include="Resources\right_24.png" />
+    <None Include="Resources\pause_24.png" />
+    <None Include="Resources\stop_playing_24.png" />
+    <None Include="Resources\play_24.png" />
+    <None Include="Resources\copy_24.png" />
+    <None Include="Resources\paste_24.png" />
+    <None Include="Resources\cut_24.png" />
+    <None Include="Resources\clipboard_24.png" />
+    <None Include="Resources\ok_24.png" />
+    <None Include="Resources\cancel_24.png" />
+    <None Include="Resources\reset_24.png" />
+    <None Include="Resources\replace_24.png" />
+    <None Include="Resources\help_24.png" />
+    <None Include="Resources\fast_fwd_24.png" />
+    <None Include="Resources\fast_bwd_24.png" />
+    <None Include="Resources\win_resize_24.png" />
+    <None Include="Resources\normal_size_24.png" />
+    <None Include="Resources\pie_24.png" />
+    <None Include="Resources\manual_24.png" />
+    <None Include="Resources\run_24.png" />
+    <None Include="Resources\run_24_1.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
