@@ -852,17 +852,17 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
             var tbl1 = WebUtils.GetResultTable("RESULT", new (string, RegistrationResult)[]{
                 GetResult(Global.KEY_DOOR1),
-                GetResult(Global.KEY_DOOR2),
-
                 GetResult(Global.KEY_HINGE1),
+               
+                GetResult(Global.KEY_DOOR2),
                 GetResult(Global.KEY_HINGE2),
 
-                GetResult(Global.KEY_HANGER1),
-                GetResult(Global.KEY_HANGER2),
-                GetResult(Global.KEY_HANGER3),
+                GetResult(Global.KEY_HANGER),
+                //GetResult(Global.KEY_HANGER2),
+                //GetResult(Global.KEY_HANGER3),
 
-                GetResult(Global.KEY_HOLDER1),
-                GetResult(Global.KEY_HOLDER2),
+                GetResult(Global.KEY_HOLDER),
+                //GetResult(Global.KEY_HOLDER2),
                 GetResult(Global.KEY_SLIDER),
             });
             await dashboard.SetResult(tbl1);
