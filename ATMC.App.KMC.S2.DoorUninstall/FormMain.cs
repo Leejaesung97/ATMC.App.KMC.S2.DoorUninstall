@@ -638,7 +638,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     }
                         await _plc.Client.SetDOBit(prefix + "OK1", ok);
                         await _plc.Client.SetDOBit(prefix + "NG1", !ok);
-                        await _plc.Client.SetDOBit("NEXT", true);       
+                           
                 }
                 else if(prefix == "DOOR2")
                 {

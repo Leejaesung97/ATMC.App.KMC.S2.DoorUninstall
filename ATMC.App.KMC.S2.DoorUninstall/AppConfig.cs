@@ -52,7 +52,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
     //================================================
     // Define INPUT / OUTPUT /MEMORY BLOCKS
     //================================================
-    public enum OutputPin { START_COMPL,NEXT, DOOR1_OK, DOOR1_NG, DOOR2_OK, DOOR2_NG, HANGER_OK, HANGER_NG, HOLDER_OK, HOLDER_NG, PCRUN, HW_ERR, AUTO } 
+    public enum OutputPin { START_COMPL,NEXT, DOOR_OK, DOOR_NG, HANGER_OK, HANGER_NG, HOLDER_OK, HOLDER_NG, PCRUN, HW_ERR, AUTO } 
     public enum InputPin { RESET, START, DOOR1, DOOR2, HANGER, HOLDER, END }
     public enum PlcBlock { CAR_TYPE, BODY_NO, SEQ_NO, HW_ERRCODE, PCRUN }
 
@@ -68,30 +68,30 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         //+-----+-----+----+----+----+----+----+----+----+----+----+
         //|name | R1  | R2 | S1 | S2 | S3 | S4 |    |    |    |    |
         //+-----+-----+----+----+----+----+----+----+----+----+----+
-
+        
 
         public static string[] HW_BITS => new string[] { "R1", "R2", "S1", "S2", "S3", "S4" };
 
         //================================================
         // KEY NAMES
         //================================================
-        public const string R1 = "R1";
-        public const string R2 = "R2";
+        public const string R1 = "R1";// S1 로봇 너트러너 장착
+        public const string R2 = "R2";// 도어 안착 로봇
         // main scans
-        public const string S1 = "S1";
-        public const string S2 = "S2";
-        public const string S3 = "S3";
-        public const string S4 = "S4";
+        public const string S1 = "S1";// 도어 촬영
+        public const string S2 = "S2";//행거 촬영 
+        public const string S3 = "S3";//행거 촬영
+        public const string S4 = "S4";//행거 촬영
 
         public const string WC_to_R1 = "WC->R1";
         public const string WC_to_R2 = "WC->R2";
 
         //registration keys
-        //public const string KEY_DOOR = "door";
+        public const string KEY_DOOR = "door";
         public const string KEY_DOOR1 = "door1";
         public const string KEY_DOOR2 = "door2";
-        public const string KEY_HINGE1 = "hinge1";
-        public const string KEY_HINGE2 = "hinge2";
+        public const string KEY_HINGE = "hinge";
+        //public const string KEY_HINGE2 = "hinge2";
 
         public const string KEY_HANGER = "hanger";
         public const string KEY_HANGER1 = "hanger1";
@@ -101,6 +101,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         public const string KEY_HOLDER = "holder";
         public const string KEY_HOLDER1 = "holder1";
         public const string KEY_HOLDER2 = "holder2";
+        public const string KEY_HOLDER3 = "holder3";
         public const string KEY_SLIDER = "slider";
 
         //SCAN ACTIONS
@@ -133,14 +134,11 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 new ScanAction(KEY_HANGER2, Scan_S3R2),
                 new ScanAction(KEY_HANGER3, Scan_S4R2),
 
-                new ScanAction(KEY_HOLDER1, Scan_S3R2),
-                new ScanAction(KEY_HOLDER2, Scan_S4R2),
+                new ScanAction(KEY_HOLDER1, Scan_S2R2),
+                new ScanAction(KEY_HOLDER2, Scan_S3R2),
+                new ScanAction(KEY_HOLDER3, Scan_S4R2),
 
-                // in case we need in json file + _poses
-                //new ScanAction(KEY_HANGER1, Scan_S2R2, new RobotPoseDef($"{KEY_HANGER1}:R2")),
-                //new ScanAction(KEY_HANGER2, Scan_S3R2, new RobotPoseDef($"{KEY_HANGER2}:R2")),
-                //new ScanAction(KEY_HOLDER1, Scan_S2R2, new RobotPoseDef($"{KEY_HOLDER1}:R2")),
-                //new ScanAction(KEY_HOLDER2, Scan_S3R2, new RobotPoseDef($"{KEY_HOLDER2}:R2")),
+                
 
             };
 
@@ -148,10 +146,10 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
             ScanActionGroups = new List<ScanActionGroup> { 
                 // main scans
-                new ScanActionGroup(name:KEY_DOOR1,actions:ScanActionDict.GetActionList(KEY_DOOR1),combine:false),
-                new ScanActionGroup(name:KEY_DOOR2,actions:ScanActionDict.GetActionList(KEY_DOOR2),combine:false),
+               
+                new ScanActionGroup(name:KEY_DOOR,actions:ScanActionDict.GetActionList(KEY_DOOR1,KEY_DOOR2),combine:true),
                 new ScanActionGroup(name:KEY_HANGER, actions:ScanActionDict.GetActionList(KEY_HANGER1,KEY_HANGER2,KEY_HANGER3),combine:true),
-                new ScanActionGroup(name:KEY_HOLDER, actions:ScanActionDict.GetActionList(KEY_HOLDER1,KEY_HOLDER2),combine:true),
+                new ScanActionGroup(name:KEY_HOLDER, actions:ScanActionDict.GetActionList(KEY_HOLDER1,KEY_HOLDER2,KEY_HOLDER3),combine:true),
             };
         }
     }
@@ -484,14 +482,10 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 if (IsAuto) { await Clear_OKNG(signal); }
                 var r = _cycle.GetResult();
                 var m = _cycle.GetModel();
-
-                //var m = _hangerCycle.GetModel();
-                //var r = _hangerCycle.GetResult();
+              
 
                 Pointcloud scene = null;
 
-                //LotusAPI.MV.Image ShadeImage1 = null;
-                //LotusAPI.MV.Image ShadeImage2 = null;
 
                 // Scan
                 if (manual_load)
@@ -522,8 +516,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     r.Clouds[action_key_hanger2] = pc2;
                     r.Clouds[action_key_hanger3] = pc3;
 
-                    //ShadeImage1 = pc1.ShadeImage;
-                    //ShadeImage2 = pc2.ShadeImage;
+
 
                     scene = Pointcloud.Combine(pc1, pc2, pc3);
                 }
@@ -555,7 +548,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 // compute matrices
                 var org_point = reg.Model.Center;
                 var new_point = org_point.Transform(res.Matrix);
-                var H_wc = LotusAPI.Math.Utils.Trans4((new_point - org_point).ToVector3d());
+                var H_wc = LotusAPI.Math.Utils.Trans4((new_point - org_point).ToVector3d());// 2번 케이스 이동량만 계산하고 회전 제거
                 Logger.Log($"{key}: {new RobotPose(H_wc)}");
                 var H_r2 = Global.WorkCell.Graph.ChangeBasis(Global.WC_to_R2, H_wc);
                 var H_cen = Global.WorkCell.Graph.ChangeBasis(H_wc, reg.Model.Center);  
@@ -603,11 +596,13 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
             string key;
             string action_key1;
             string action_key2;
+            string action_key3;
             string key_slider;
             string key_hanger;
 
             action_key1 = Global.KEY_HOLDER1;
             action_key2 = Global.KEY_HOLDER2;
+            action_key3 = Global.KEY_HOLDER3;
             key = Global.KEY_HOLDER;
             key_slider = Global.KEY_SLIDER;
             key_hanger = Global.KEY_HANGER;
@@ -630,8 +625,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
                 Pointcloud scene = null;
 
-                //LotusAPI.MV.Image ShadeImage1 = null;
-                //LotusAPI.MV.Image ShadeImage2 = null;
+                
 
                 // Scan
                 if (manual_load)
@@ -647,23 +641,24 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     Logger.Log($"Processing ({key})...");
                     var scanAction1 = Global.ScanActionDict[action_key1];
                     var scanAction2 = Global.ScanActionDict[action_key2];
+                    var scanAction3 = Global.ScanActionDict[action_key3];
 
                     var t1 = Task.Run(async delegate { return await Scan(scanAction1); });
                     var t2 = Task.Run(async delegate { return await Scan(scanAction2); });
+                    var t3 = Task.Run(async delegate { return await Scan(scanAction3); });
 
-                    await Task.WhenAll(t1, t2);
+                    await Task.WhenAll(t1, t2,t3);
 
                     var pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
                     var pc2 = t2.Result ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
+                    var pc3 = t3.Result ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
 
                     //keep both raw scans before alignment so an align failure is tracable
                     r.Clouds[action_key1] = pc1;
                     r.Clouds[action_key2] = pc2;
-
-                    //ShadeImage1 = pc1.ShadeImage;
-                    //ShadeImage2 = pc2.ShadeImage;
-
-                    scene = Pointcloud.Combine(pc1, pc2);
+                    r.Clouds[action_key3] = pc3;
+                    
+                    scene = Pointcloud.Combine(pc1, pc2,pc3);
                 }
 
                 //display
@@ -721,11 +716,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 bool holder_ok = true;
                 bool slider_ok = slider_res.OK;
 
-                //var reg = m.RegDict[key];
-                //var reg_slider = m.RegDict[key_slider];
-                //var reg_hanger = m.RegDict[key_hanger];
-
-                //check holder 3 points if available
+                //check holder 4 points if available
                 if (r.RegResults.TryGetValue(key_hanger, out var hanger_res))
                 {
                     if (!reg_hanger.Model.HasInfo("RefPlane")) throw new Exception("HANGER model RefPlane info does not exist!");
@@ -874,8 +865,9 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         {
             MessageBuilder mb = new MessageBuilder();
             mb.Set("groups", new Json[] {
-                new Json(){ ["title"]= "DOOR1", ["actions"] = new Enum[] { InputPin.DOOR1, InputPin.DOOR2 } },
-                new Json(){ ["title"]= "HANGER", ["actions"] = new Enum[] { InputPin.HANGER, InputPin.HOLDER} },
+                new Json(){ ["title"]= "DOOR", ["actions"] = new Enum[] { InputPin.DOOR1, InputPin.DOOR2 } },
+                new Json(){ ["title"]= "HANGER", ["actions"] = new Enum[] { InputPin.HANGER}},
+                new Json(){ ["title"]= "HOLDER", ["actions"] = new Enum[] { InputPin.HOLDER} },
             });
             return mb;
         }

@@ -11,3 +11,13 @@ C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstal\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\
 C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstal\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.2C4DFA45.Up2Date
 C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstal\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.exe
 C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstal\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.pdb
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.csproj.AssemblyReference.cache
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.csproj.SuggestedBindingRedirects.cache
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.exe.config
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.FormMain.resources
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.Properties.Resources.resources
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.csproj.GenerateResource.cache
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.csproj.CoreCompileInputs.cache
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.2C4DFA45.Up2Date
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.exe
+C:\ATMCprg\ATMC.App.KMC.S2.DoorUninstall\ATMC.App.KMC.S2.DoorUninstall\obj\Debug\ATMC.App.KMC.S2.DoorUninstall.pdb
