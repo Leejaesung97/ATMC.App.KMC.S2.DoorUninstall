@@ -626,34 +626,21 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         //19. Set OK/NG to PLC
         //============================================================
         async Task Set_OKNG(string prefix, bool ok) {
-            try {
+            try
+            {
                 prefix = prefix == "" ? "" : prefix + "_";
-                if(prefix == "DOOR1")
+                if (UseRobotIO)
                 {
-                    if (UseRobotIO)
-                    {
-                        await dashboard.ClearOutputPins(_robot_io?.PinMap);
-                        await _robot_io?.Client?.SetOutput(prefix + (ok ? "OK1" : "NG1"));
-                        return;
-                    }
-                        await _plc.Client.SetDOBit(prefix + "OK1", ok);
-                        await _plc.Client.SetDOBit(prefix + "NG1", !ok);
-                           
+                    await dashboard.ClearOutputPins(_robot_io?.PinMap);
+                    await _robot_io?.Client?.SetOutput(prefix + (ok ? "OK" : "NG"));
+                    return;
                 }
-                else if(prefix == "DOOR2")
-                {
-                    if (UseRobotIO)
-                    {
-                        await dashboard.ClearOutputPins(_robot_io?.PinMap);
-                        await _robot_io?.Client?.SetOutput(prefix + (ok ? "OK2" : "NG2"));
-                        return;
-                    }
-                        await _plc.Client.SetDOBit(prefix + "OK2", ok);
-                        await _plc.Client.SetDOBit(prefix + "NG2", !ok);
-                }
-                
-            } catch(Exception ex) { Logger.Error(ex.Message); Logger.Trace(ex.StackTrace); }
+                await _plc.Client.SetDOBit(prefix + "OK", ok);
+                await _plc.Client.SetDOBit(prefix + "NG", !ok);
+            }
+            catch (Exception ex) { Logger.Error(ex.Message); Logger.Trace(ex.StackTrace); }
         }
+        
         async Task Set_OK(string prefix) => await Set_OKNG(prefix, true);
         async Task Set_NG(string prefix) => await Set_OKNG(prefix, false);
         async Task Clear_OKNG(string prefix) {
@@ -852,10 +839,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
             var tbl1 = WebUtils.GetResultTable("RESULT", new (string, RegistrationResult)[]{
                 GetResult(Global.KEY_DOOR1),
-                GetResult(Global.KEY_HINGE1),
-               
                 GetResult(Global.KEY_DOOR2),
-                GetResult(Global.KEY_HINGE2),
+                GetResult(Global.KEY_HINGE),
 
                 GetResult(Global.KEY_HANGER),
                 //GetResult(Global.KEY_HANGER2),
@@ -873,8 +858,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         {
             //Reset PLC output
             await _plc.Client.ClearDOBits(new List<Enum> {
-                    OutputPin.DOOR1_OK, OutputPin.DOOR1_NG,
-                    OutputPin.DOOR2_OK, OutputPin.DOOR2_NG,
+                    OutputPin.DOOR_OK, OutputPin.DOOR_NG,
                     OutputPin.NEXT,
                     OutputPin.HANGER_OK, OutputPin.HANGER_NG,
                     OutputPin.HOLDER_OK, OutputPin.HOLDER_NG,

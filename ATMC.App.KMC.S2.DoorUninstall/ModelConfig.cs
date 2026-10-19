@@ -50,8 +50,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
             // main registration configs
             { Global.KEY_DOOR1, DoorReg},
             { Global.KEY_DOOR2, DoorReg},
-            { Global.KEY_HINGE1, HingeReg},
-            { Global.KEY_HINGE2, HingeReg},
+            { Global.KEY_HINGE, HingeReg},
+            //{ Global.KEY_HINGE2, HingeReg},
             { Global.KEY_HANGER, HangerReg},
             { Global.KEY_HOLDER, HolderReg},
             { Global.KEY_SLIDER, SliderReg},

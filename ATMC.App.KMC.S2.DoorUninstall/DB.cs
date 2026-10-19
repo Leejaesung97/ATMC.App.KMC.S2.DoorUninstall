@@ -58,15 +58,16 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     DbEngine.CreateFloatColumn(name:Global.KEY_DOOR2 + "_DRY"),
                     DbEngine.CreateFloatColumn(name:Global.KEY_DOOR2 + "_DRZ"), 
                     //hinge1
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_FIT"),
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_OVL"),
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_DX"),
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_DY"),
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_DZ"),
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_DRX"),
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_DRY"),
-                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE1 + "_DRZ"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_FIT"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_OVL"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_DX"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_DY"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_DZ"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_DRX"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_DRY"),
+                    DbEngine.CreateFloatColumn(name:Global.KEY_HINGE + "_DRZ"),
                     //hinge2
+                    /*
                     DbEngine.CreateFloatColumn(name:Global.KEY_HINGE2 + "_FIT"),
                     DbEngine.CreateFloatColumn(name:Global.KEY_HINGE2 + "_OVL"),
                     DbEngine.CreateFloatColumn(name:Global.KEY_HINGE2 + "_DX"),
@@ -75,6 +76,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     DbEngine.CreateFloatColumn(name:Global.KEY_HINGE2 + "_DRX"),
                     DbEngine.CreateFloatColumn(name:Global.KEY_HINGE2 + "_DRY"),
                     DbEngine.CreateFloatColumn(name:Global.KEY_HINGE2 + "_DRZ"),
+                    */
                     //hanger
                     DbEngine.CreateFloatColumn(name:Global.KEY_HANGER + "_FIT"),
                     DbEngine.CreateFloatColumn(name:Global.KEY_HANGER + "_OVL"),

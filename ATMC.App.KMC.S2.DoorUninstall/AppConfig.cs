@@ -160,19 +160,28 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
     //================================================
     public partial class FormMain {
 
-        async Task DO_DOOR1_SCAN()
+        async Task DO_DOOR_SCAN(int idx)
         {
             bool manual_load = IsManual && ModifierKeys == Keys.Alt;
-            string key = Global.KEY_DOOR1;
-            string action_key_door1 = Global.KEY_DOOR1;
-            //string action_key_door2 = Global.KEY_DOOR2;
-            string signal = "DOOR1"; //just OK,NG
-            string action_key_hinge1 = Global.KEY_HINGE1;
-            //string action_key_hinge2 = Global.KEY_HINGE2;
+            string key;
+            string action_key;
+            string signal = "DOOR"; //just OK,NG
+            string key_hinge;
+            //string key_hinge2;
 
+
+          
+         
+            key = Global.KEY_DOOR;
+            action_key = Global.KEY_DOOR1;
+            if (idx == 2) action_key = Global.KEY_DOOR2;
+            key_hinge = Global.KEY_HINGE;
+            //key_hinge2 = Global.KEY_HINGE2;
+          
+           
 
             await dashboard.SetResultTag(0, key, "..."); //processing
-            FlyTo(key); //fly to scan view
+            FlyTo(action_key); //fly to scan view
 
             try
             {
@@ -181,7 +190,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
                 Pointcloud pc = null;
 
-                if (manual_load)
+                if (manual_load && idx == 2)
                 {
                     Global.MainForm.Invoke(new Action(delegate
                     {
@@ -190,131 +199,141 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 }
                 else
                 {
-                    Logger.Log($"Processing ({key})...");
-                    var scanAction1 = Global.ScanActionDict[action_key_door1];
-                    //var scanAction2 = Global.ScanActionDict[action_key_door2];
+                    //Scan
+                    Logger.Log($"Processing ({action_key})...");
+                    var scanAction = Global.ScanActionDict[action_key];
+                    pc = await Scan(scanAction);
 
-                    var t1 = Task.Run(async delegate { return await Scan(scanAction1); });
-                    //var t2 = Task.Run(async delegate { return await Scan(scanAction2); });
-                    await Task.WhenAll(t1);
-                    var pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
-                    //var pc2 = t2.Result ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
-
-                    //keep both raw scans before alignment so an align failure is tracable
-                    r.Clouds[action_key_door1] = pc1;
-                    //r.Clouds[action_key_door2] = pc2;
-
-                    //ShadeImage1 = pc1.ShadeImage;
-                    //ShadeImage2 = pc2.ShadeImage;
-
-                    pc = Pointcloud.Combine(pc1);
+                    r.Clouds[action_key] = pc;
                 }
+
+                //pulse next pin
+                if (IsAuto && !UseRobotIO && idx == 1) { await _plc?.Client?.PulseDOBit(OutputPin.NEXT, 500); }
+
                 //display
                 AsyncInvoke(delegate
                 {
                     var sv = sv_Main.GetViewer();
-                    sv[$"DOOR1/{key}"].UpdateObject(pc.Decimate(Global.Setting.DecimationStep), Color.Gray);
+                    sv[$"DOOR/{action_key}"].UpdateObject(pc.Decimate(Global.Setting.DecimationStep), Color.Gray);
                     sv.Render();
                 });
 
                 //Finish scan => compute result 
-            
-
-                Pointcloud door1_scene = null;
-
-                door1_scene = pc;
-
-                //if (!r.Matrices.TryGetValue("H_body_wc", out var H_body_wc)) throw new Exception("H_body_wc matrix does not exist=> Use identity matrix!");
-                //r.Matrices.TryGetValue("H_body_wc", out var H_body_wc);
-
-                //CALCUCLATE REGISTRATION
-                //align but dont check limit because we are in WC
-                //var res = m.RegDict[key].Align(scene: door_scene, initial_matrix: H_body_wc, check_limit: false);
-                var res = m.RegDict[key].Align(scene: door1_scene, initial_matrix: null, check_limit: false);
-                if (res == null) throw new Exception($"[{key}] Result is NULL!");
-
-                //res.SceneImgs = new LotusAPI.MV.Image[] { door1_scene.ShadeImage, door2_scene.ShadeImage };
-
-                //compute matrices
-                var H_door1_wc = res.Matrix;
-                var H_door1_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_door1_wc);
-                var H_door1_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_door1_wc);
-                var H_door1_cen = Global.WorkCell.Graph.ChangeBasis(H_door1_wc, m.DoorReg.Model.Center);
-                r.Matrices["H_door1_wc"] = H_door1_wc;
-                res.LimitMatrix = H_door1_cen;
-                res.CheckLimit();
-                r.RegResults[key] = res;
-
-                //align 2 hinges
-                var t3 = Task.Run(delegate { return m.HingeReg.Align(scene: door1_scene, initial_matrix: H_door1_wc, check_limit: false); });
-                //var t4 = Task.Run(delegate { return m.Hinge2Reg.Align(scene: door_scene, initial_matrix: H_door_wc, check_limit: false); });
-                await Task.WhenAll(t3);//t4
-
-                var hinge1_res = t3.Result;
-                //var hinge2_res = t4.Result;
-
-                var H_hinge1_wc = hinge1_res.Matrix;
-                var H_hinge1_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_hinge1_wc);
-                var H_hinge1_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_hinge1_wc);
-                var H_hinge1_cen = Global.WorkCell.Graph.ChangeBasis(H_hinge1_wc, m.HingeReg.Model.Center);
-                r.Matrices["H_hinge1_wc"] = H_hinge1_wc;
-                hinge1_res.LimitMatrix = H_hinge1_cen;
-                hinge1_res.CheckLimit();
-                r.RegResults[action_key_hinge1] = hinge1_res;
-
-                //var H_hinge2_wc = hinge2_res.Matrix;
-                //var H_hinge2_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_hinge2_wc);
-                //var H_hinge2_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_hinge2_wc);
-                //var H_hinge2_cen = Global.WorkCell.Graph.ChangeBasis(H_hinge2_wc, m.Hinge2Reg.Model.Center);
-                //r.Matrices["H_hinge2_wc"] = H_hinge2_wc;
-                //hinge2_res.LimitMatrix = H_hinge2_cen;
-                //hinge2_res.CheckLimit();
-                //r.RegResults[action_key_hinge2] = hinge2_res;
-
-                //display 3D
-                AsyncInvoke(delegate
+                if (idx == 2)
                 {
-                    //cloud view
-                    var sv = sv_Main.GetViewer();
-                    sv[$"DOOR1/{key}_aligned"].UpdateObject(res.Aligned, res.OK ? Global.ColorOK : Global.ColorNG);
-                    sv[$"DOOR1/{action_key_hinge1}_aligned"].UpdateObject(hinge1_res.Aligned, hinge1_res.OK ? Global.ColorOK : Global.ColorNG);
-                    sv[$"DOOR1/CAD"].Matrix = H_door1_wc;
-                    sv.Render();
-                });
-                //update result table
-                await UpdateResultView();
-                // check OK
-                if (!res.OK) { throw new Exception("Door1 registration failed!"); }
-                if (!hinge1_res.OK) { throw new Exception("Hinge1 registration failed!"); }
-                //if (!hinge2_res.OK) { throw new Exception("Hinge2 registration failed!"); }
 
-                //send to robot
-                if (!await SendRobotShift("R1", H_door1_r1, Global.Setting.UF_DOOR)) throw new Exception($"Failed to send DOOR1 shift to R1 robot!");
-                if (!await SendRobotShift("R1", H_hinge1_r1, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R1 robot!");
-                //if (!await SendRobotShift("R1", H_hinge2_r1, Global.Setting.UF_HINGE + 1)) throw new Exception($"Failed to send HINGE2 shift to R1 robot!");
+                    Pointcloud door_scene = null;
 
-                if (!await SendRobotShift("R2", H_door1_r2, Global.Setting.UF_DOOR)) throw new Exception($"Failed to send DOOR1 shift to R2 robot!");
-                if (!await SendRobotShift("R2", H_hinge1_r2, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R2 robot!");
-                //if (!await SendRobotShift("R2", H_hinge2_r2, Global.Setting.UF_HINGE + 1)) throw new Exception($"Failed to send HINGE2 shift to R2 robot!");
+                    if (manual_load && idx == 2)
+                    {
+                        door_scene = pc;
+                    }
+                    else
+                    {
+                        //combine scene
+                      
+                       
+                            door_scene =
+                                Pointcloud.Combine(r.Clouds[Global.KEY_DOOR1], r.Clouds[Global.KEY_DOOR2]);
+                       
+                        
+                    }
 
-                //set PLC OK/NG
-                if (IsAuto) await Set_OK(signal);
-               
 
-                //FlyTo("org");
+                    if (!r.Matrices.TryGetValue("H_body_wc", out var H_body_wc)) throw new Exception("H_body_wc matrix does not exist=> Use identity matrix!");
 
+                    //CALCUCLATE REGISTRATION
+                    //align but dont check limit because we are in WC
+                    var res = m.RegDict[key].Align(scene: door_scene, initial_matrix: H_body_wc, check_limit: false);
+                    if (res == null) throw new Exception($"[{key}] Result is NULL!");
+
+                    //res.SceneImgs = new LotusAPI.MV.Image[] { door1_scene.ShadeImage, door2_scene.ShadeImage };
+
+                    //compute matrices
+                    var H_door_wc = res.Matrix;
+                    var H_door_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_door_wc);
+                    var H_door_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_door_wc);
+                    var H_door_cen = Global.WorkCell.Graph.ChangeBasis(H_door_wc, m.DoorReg.Model.Center);
+                    r.Matrices["H_door_wc"] = H_door_wc;
+                    res.LimitMatrix = H_door_cen;
+                    res.CheckLimit();
+                    r.RegResults[key] = res;
+
+                    //align 2 hinges
+                    var t3 = Task.Run(delegate { return m.HingeReg.Align(scene: door_scene, initial_matrix: H_door_wc, check_limit: false); });
+                    //var t4 = Task.Run(delegate { return m.Hinge2Reg.Align(scene: door_scene, initial_matrix: H_door_wc, check_limit: false); });
+                    await Task.WhenAll(t3);//t4
+
+                    var hinge_res = t3.Result;
+                    //var hinge2_res = t2.Result;
+
+                    var H_hinge1_wc = hinge_res.Matrix;
+                    var H_hinge1_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_hinge1_wc);
+                    var H_hinge1_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_hinge1_wc);
+                    var H_hinge1_cen = Global.WorkCell.Graph.ChangeBasis(H_hinge1_wc, m.HingeReg.Model.Center);
+                    r.Matrices["H_hinge1_wc"] = H_hinge1_wc;
+                    hinge_res.LimitMatrix = H_hinge1_cen;
+                    hinge_res.CheckLimit();
+                    r.RegResults[key_hinge] = hinge_res;
+
+                    
+
+                    //______________________________________________________________________________________________________________________________________
+                    //align but dont check limit because we are in WC
+                    //var res = reg.Align(scene: door_scene, initial_matrix: null, check_limit: false)
+                    //    ?? throw new Exception($"[{key}] Registration result is NULL!");
+
+                    //r.RegResults[key] = res;
+
+                    //var H_wc = res.Matrix;
+                    //var H_r1 = Global.WorkCell.Graph.ChangeBasis(Global.WC_to_R1, H_wc);
+                    //var H_r2 = Global.WorkCell.Graph.ChangeBasis(Global.WC_to_R2, H_wc);
+                    //var H_cen = Global.WorkCell.Graph.ChangeBasis(H_wc, reg.Model.Center);
+
+                    ////check limit with centered shift
+                    //res.LimitMatrix = H_cen;
+                    //res.CheckLimit();
+                    //______________________________________________________________________________________________________________________________________
+
+                    //display 3D
+                    AsyncInvoke(delegate
+                    {
+                        //cloud view
+                        var sv = sv_Main.GetViewer();
+                        sv[$"DOOR/{key}_aligned"].UpdateObject(res.Aligned, res.OK ? Global.ColorOK : Global.ColorNG);
+                        sv[$"DOOR/CAD"].Matrix = H_door_wc;
+                        sv.Render();
+                    });
+                    //update result table
+                    await UpdateResultView();
+                    // check OK
+                    // check OK
+                    if (!res.OK) { throw new Exception("Door registration failed!"); }
+                    if (!hinge_res.OK) { throw new Exception("Hinge registration failed!"); }
+
+                    //send to robot
+                    if (!await SendRobotShift("R1", H_door_r1, Global.Setting.UF_DOOR)) throw new Exception($"Failed to send DOOR shift to R1 robot!");
+                    if (!await SendRobotShift("R1", H_hinge1_r1, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R1 robot!");
+                    //if (!await SendRobotShift("R1", H_hinge2_r1, Global.Setting.UF_HINGE + 10)) throw new Exception($"Failed to send HINGE2 shift to R1 robot!");
+
+                    if (!await SendRobotShift("R2", H_door_r2, Global.Setting.UF_DOOR)) throw new Exception($"Failed to send DOOR shift to R2 robot!");
+                    if (!await SendRobotShift("R2", H_hinge1_r2, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R2 robot!");
+                    //if (!await SendRobotShift("R2", H_hinge2_r2, Global.Setting.UF_HINGE + 10)) throw new Exception($"Failed to send HINGE2 shift to R2 robot!");
+
+                    //set PLC OK/NG
+                    if (IsAuto) await Set_OK(signal);
+                    FlyTo("org");
+                }
             }
-
             catch (Exception ex)
             {
 
                 LotusAPI.Logger.Error(ex.Message);
                 LotusAPI.Logger.Trace(ex.StackTrace);
                 if (IsAuto) await Set_NG(signal);
-                
             }
         }
-
+        /*
         async Task DO_DOOR2_SCAN()
         {
             bool manual_load = IsManual && ModifierKeys == Keys.Alt;
@@ -322,7 +341,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
             //tring action_key_door1 = Global.KEY_DOOR1;
             string action_key_door2 = Global.KEY_DOOR2;
             string signal = "DOOR2"; //just OK,NG
-            string action_key_hinge2 = Global.KEY_HINGE2;
+            //string action_key_hinge2 = Global.KEY_HINGE2;
             //string action_key_hinge2 = Global.KEY_HINGE2;
             await _plc.Client.SetDOBit("NEXT", false);
 
@@ -415,7 +434,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 r.Matrices["H_hinge2_wc"] = H_hinge2_wc;
                 hinge2_res.LimitMatrix = H_hinge2_cen;
                 hinge2_res.CheckLimit();
-                r.RegResults[action_key_hinge2] = hinge2_res;
+                //r.RegResults[action_key_hinge2] = hinge2_res;
 
                 //var H_hinge2_wc = hinge2_res.Matrix;
                 //var H_hinge2_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_hinge2_wc);
@@ -432,7 +451,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     //cloud view
                     var sv = sv_Main.GetViewer();
                     sv[$"DOOR2/{key}_aligned"].UpdateObject(res.Aligned, res.OK ? Global.ColorOK : Global.ColorNG);
-                    sv[$"DOOR2/{action_key_hinge2}_aligned"].UpdateObject(hinge2_res.Aligned, hinge2_res.OK ? Global.ColorOK : Global.ColorNG);
+                    //sv[$"DOOR2/{action_key_hinge2}_aligned"].UpdateObject(hinge2_res.Aligned, hinge2_res.OK ? Global.ColorOK : Global.ColorNG);
                     sv[$"DOOR2/CAD"].Matrix = H_door2_wc;
                     sv.Render();
                 });
@@ -465,6 +484,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 if (IsAuto) await Set_NG(signal);
             }
         }
+        */
         async Task DO_HANGER_SCAN()
         {
             bool manual_load = IsManual && ModifierKeys == Keys.Alt;
@@ -847,8 +867,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     case InputPin.END: _tq.Enqueue(DO_END); break;
 
                     // main scan signals
-                    case InputPin.DOOR1: _tq.Enqueue(async () => await DO_DOOR1_SCAN()); break;
-                    case InputPin.DOOR2: _tq.Enqueue(async () => await DO_DOOR2_SCAN()); break;
+                    case InputPin.DOOR1: _tq.Enqueue(async () => await DO_DOOR_SCAN(1)); break;
+                    case InputPin.DOOR2: _tq.Enqueue(async () => await DO_DOOR_SCAN(2)); break;
                     case InputPin.HANGER: _tq.Enqueue(async () => await DO_HANGER_SCAN()); break;
                     case InputPin.HOLDER: _tq.Enqueue(async () => await DO_HOLDER_SCAN()); break;
                     //TODO: SCAN SIGNAL

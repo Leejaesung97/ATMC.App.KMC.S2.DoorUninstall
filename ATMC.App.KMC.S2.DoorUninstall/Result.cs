@@ -97,7 +97,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     }
                 }
                 {
-                    key = Global.KEY_HINGE1;
+                    key = Global.KEY_HINGE;
                     RegResults.TryGetValue(key, out var res);
                     if (res != null)
                     {
@@ -114,7 +114,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     }
 
                 }
-
+                /*
                 {
                     key = Global.KEY_HINGE2;
                    RegResults.TryGetValue(key, out var res);
@@ -132,7 +132,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                         values[key + "_DRZ"] = (float)pose.Rz;
                     }
                 }
-
+                    */
                 {
                     key = Global.KEY_HANGER;
                     RegResults.TryGetValue(key, out var res);
