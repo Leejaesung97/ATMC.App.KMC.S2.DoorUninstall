@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|c:\\atmcprg\\atmc.app.kmc.s2.dooruninstall\\atmc.app.kmc.s2.dooruninstall\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|c:\\atmcprg\\atmc.app.kmc.s2.dooruninstall\\atmc.app.kmc.s2.dooruninstall\\modelconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\modelconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|c:\\atmcprg\\atmc.app.kmc.s2.dooruninstall\\atmc.app.kmc.s2.dooruninstall\\db.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\db.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|c:\\atmcprg\\atmc.app.kmc.s2.dooruninstall\\atmc.app.kmc.s2.dooruninstall\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\atmc.app.kmc.s2.dooruninstall\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\atmc.app.kmc.s2.dooruninstall\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\atmc.app.kmc.s2.dooruninstall\\db.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\db.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\atmc.app.kmc.s2.dooruninstall\\modelconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D729E42B-50F0-4893-A613-2DDF9493DFF2}|ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall.csproj|solutionrelative:atmc.app.kmc.s2.dooruninstall\\modelconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,69 +30,68 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Result.cs",
               "DocumentMoniker": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\Result.cs",
               "RelativeDocumentMoniker": "ATMC.App.KMC.S2.DoorUninstall\\Result.cs",
-              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\Result.cs*",
-              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\Result.cs*",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAnwHQAAAASAAAAAAAAAA==",
+              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\Result.cs",
+              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\Result.cs",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAswHEAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-19T01:31:49.281Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "ModelConfig.cs",
               "DocumentMoniker": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\ModelConfig.cs",
               "RelativeDocumentMoniker": "ATMC.App.KMC.S2.DoorUninstall\\ModelConfig.cs",
-              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\ModelConfig.cs*",
-              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\ModelConfig.cs*",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAnwDUAAAAOAAAAAAAAAA==",
+              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\ModelConfig.cs",
+              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\ModelConfig.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAywDUAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-19T01:31:38.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-10-19T01:31:38.615Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "DB.cs",
               "DocumentMoniker": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\DB.cs",
               "RelativeDocumentMoniker": "ATMC.App.KMC.S2.DoorUninstall\\DB.cs",
-              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\DB.cs",
-              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\DB.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAnwEQAAAAcAAAAAAAAAA==",
+              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\DB.cs*",
+              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\DB.cs*",
+              "ViewState": "AgIAABYAAAAAAAAAAAAnwDMAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-19T01:31:09.202Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "AppConfig.cs",
               "DocumentMoniker": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\AppConfig.cs",
               "RelativeDocumentMoniker": "ATMC.App.KMC.S2.DoorUninstall\\AppConfig.cs",
-              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\AppConfig.cs",
-              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\AppConfig.cs",
-              "ViewState": "AgIAABkBAAAAAAAAAAAAAE4BAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\AppConfig.cs*",
+              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\AppConfig.cs*",
+              "ViewState": "AgIAAPUAAAAAAAAAAAAAwAYBAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-12T07:50:33.981Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "FormMain.cs",
               "DocumentMoniker": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\FormMain.cs",
               "RelativeDocumentMoniker": "ATMC.App.KMC.S2.DoorUninstall\\FormMain.cs",
-              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\FormMain.cs",
-              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\FormMain.cs",
-              "ViewState": "AgIAAC4DAAAAAAAAAAAwwEkDAAAsAAAAAAAAAA==",
+              "ToolTip": "C:\\ATMCprg\\ATMC.App.KMC.S2.DoorUninstall\\ATMC.App.KMC.S2.DoorUninstall\\FormMain.cs*",
+              "RelativeToolTip": "ATMC.App.KMC.S2.DoorUninstall\\FormMain.cs*",
+              "ViewState": "AgIAADMDAAAAAAAAAAAowEkDAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-12T07:33:46.918Z",
               "EditorCaption": ""

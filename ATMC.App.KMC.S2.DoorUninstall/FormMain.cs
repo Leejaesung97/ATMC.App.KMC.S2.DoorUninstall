@@ -838,8 +838,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
             var GetResult = new Func<string, (string, RegistrationResult)>(key => (key, r?.GetResultOrDefault(key)));
 
             var tbl1 = WebUtils.GetResultTable("RESULT", new (string, RegistrationResult)[]{
-                GetResult(Global.KEY_DOOR1),
-                GetResult(Global.KEY_DOOR2),
+                GetResult(Global.KEY_DOOR),
+                //GetResult(Global.KEY_DOOR2),
                 GetResult(Global.KEY_HINGE),
 
                 GetResult(Global.KEY_HANGER),

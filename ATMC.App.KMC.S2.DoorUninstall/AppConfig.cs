@@ -189,9 +189,12 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 var m = _cycle.GetModel();
 
                 Pointcloud pc = null;
+                Pointcloud pc1 = null;
+                Pointcloud pc2 = null;
 
                 if (manual_load && idx == 2)
                 {
+
                     Global.MainForm.Invoke(new Action(delegate
                     {
                         pc = new Pointcloud(LotusAPI.DialogUtils.OpenPLYFile("Open scene file"));
@@ -202,9 +205,9 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     //Scan
                     Logger.Log($"Processing ({action_key})...");
                     var scanAction = Global.ScanActionDict[action_key];
-                    pc = await Scan(scanAction);
+                    pc1 = await Scan(scanAction);
 
-                    r.Clouds[action_key] = pc;
+                    //await Task.WhenAll(pc1);
                 }
 
                 //pulse next pin
@@ -231,12 +234,15 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     else
                     {
                         //combine scene
-                      
-                       
-                            door_scene =
-                                Pointcloud.Combine(r.Clouds[Global.KEY_DOOR1], r.Clouds[Global.KEY_DOOR2]);
-                       
-                        
+                        Logger.Log($"Processing ({action_key})...");
+                        var scanAction = Global.ScanActionDict[action_key];
+                        pc2 = await Scan(scanAction);
+
+                        pc = Pointcloud.Combine(pc1, pc2);
+
+                        door_scene = pc;
+
+
                     }
 
 
@@ -267,12 +273,12 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     var hinge_res = t3.Result;
                     //var hinge2_res = t2.Result;
 
-                    var H_hinge1_wc = hinge_res.Matrix;
-                    var H_hinge1_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_hinge1_wc);
-                    var H_hinge1_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_hinge1_wc);
-                    var H_hinge1_cen = Global.WorkCell.Graph.ChangeBasis(H_hinge1_wc, m.HingeReg.Model.Center);
-                    r.Matrices["H_hinge1_wc"] = H_hinge1_wc;
-                    hinge_res.LimitMatrix = H_hinge1_cen;
+                    var H_hinge_wc = hinge_res.Matrix;
+                    var H_hinge_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_hinge_wc);
+                    var H_hinge_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_hinge_wc);
+                    var H_hinge_cen = Global.WorkCell.Graph.ChangeBasis(H_hinge_wc, m.HingeReg.Model.Center);
+                    r.Matrices["H_hinge_wc"] = H_hinge_wc;
+                    hinge_res.LimitMatrix = H_hinge_cen;
                     hinge_res.CheckLimit();
                     r.RegResults[key_hinge] = hinge_res;
 
@@ -313,11 +319,11 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
                     //send to robot
                     if (!await SendRobotShift("R1", H_door_r1, Global.Setting.UF_DOOR)) throw new Exception($"Failed to send DOOR shift to R1 robot!");
-                    if (!await SendRobotShift("R1", H_hinge1_r1, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R1 robot!");
+                    if (!await SendRobotShift("R1", H_hinge_r1, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R1 robot!");
                     //if (!await SendRobotShift("R1", H_hinge2_r1, Global.Setting.UF_HINGE + 10)) throw new Exception($"Failed to send HINGE2 shift to R1 robot!");
 
                     if (!await SendRobotShift("R2", H_door_r2, Global.Setting.UF_DOOR)) throw new Exception($"Failed to send DOOR shift to R2 robot!");
-                    if (!await SendRobotShift("R2", H_hinge1_r2, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R2 robot!");
+                    if (!await SendRobotShift("R2", H_hinge_r2, Global.Setting.UF_HINGE)) throw new Exception($"Failed to send HINGE1 shift to R2 robot!");
                     //if (!await SendRobotShift("R2", H_hinge2_r2, Global.Setting.UF_HINGE + 10)) throw new Exception($"Failed to send HINGE2 shift to R2 robot!");
 
                     //set PLC OK/NG
