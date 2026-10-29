@@ -892,8 +892,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     FlyTo("org");
                     viewer.Scene.Remove("CLOUDS");
                     viewer.Scene.Remove("BODY");
-                    viewer.Scene.Remove("DOOR1");
-                    viewer.Scene.Remove("DOOR2");
+                    viewer.Scene.Remove("DOOR");
+                    //viewer.Scene.Remove("DOOR2");
                     viewer.Scene.Remove("HINGE");
                     viewer.Scene.Remove("HANGER");
                     viewer.Scene.Remove("HOLDER");

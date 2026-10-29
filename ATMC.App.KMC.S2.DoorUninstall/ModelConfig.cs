@@ -48,8 +48,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         //Define registration keys
         internal Dictionary<string, FastRegistrationConfig> RegDict => new Dictionary<string, FastRegistrationConfig> {
             // main registration configs
-            { Global.KEY_DOOR1, DoorReg},
-            { Global.KEY_DOOR2, DoorReg},
+            { Global.KEY_DOOR, DoorReg},
+            //{ Global.KEY_DOOR2, DoorReg},
             { Global.KEY_HINGE, HingeReg},
             //{ Global.KEY_HINGE2, HingeReg},
             { Global.KEY_HANGER, HangerReg},

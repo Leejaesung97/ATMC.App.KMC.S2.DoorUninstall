@@ -87,9 +87,10 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         public const string WC_to_R2 = "WC->R2";
 
         //registration keys
+
         public const string KEY_DOOR = "door";
-        public const string KEY_DOOR1 = "door1";
-        public const string KEY_DOOR2 = "door2";
+        public const string KEY_DOOR1 = KEY_DOOR + "1";
+        public const string KEY_DOOR2 = KEY_DOOR + "2";
         public const string KEY_HINGE = "hinge";
         //public const string KEY_HINGE2 = "hinge2";
 
@@ -163,40 +164,30 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         async Task DO_DOOR_SCAN(int idx)
         {
             bool manual_load = IsManual && ModifierKeys == Keys.Alt;
-            string key;
-            string action_key;
+            string key = Global.KEY_DOOR;
             string signal = "DOOR"; //just OK,NG
-            string key_hinge;
+            string key_hinge = Global.KEY_HINGE;
             //string key_hinge2;
+            string action_key = idx == 1 ? Global.KEY_DOOR1 : Global.KEY_DOOR2;
 
-
-          
-         
-            key = Global.KEY_DOOR;
-            action_key = Global.KEY_DOOR1;
-            if (idx == 2) action_key = Global.KEY_DOOR2;
-            key_hinge = Global.KEY_HINGE;
             //key_hinge2 = Global.KEY_HINGE2;
           
-           
-
             await dashboard.SetResultTag(0, key, "..."); //processing
             FlyTo(action_key); //fly to scan view
-
+          
             try
             {
+
+                if (IsAuto) { await Clear_OKNG(signal); }
                 var r = _cycle.GetResult();
                 var m = _cycle.GetModel();
 
                 Pointcloud pc = null;
-                Pointcloud pc1 = null;
-                Pointcloud pc2 = null;
 
-                if (manual_load && idx == 2)
+
+                if (manual_load)
                 {
-
-                    Global.MainForm.Invoke(new Action(delegate
-                    {
+                    Global.MainForm.Invoke(new Action(delegate {
                         pc = new Pointcloud(LotusAPI.DialogUtils.OpenPLYFile("Open scene file"));
                     }));
                 }
@@ -205,17 +196,17 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     //Scan
                     Logger.Log($"Processing ({action_key})...");
                     var scanAction = Global.ScanActionDict[action_key];
-                    pc1 = await Scan(scanAction);
+                    pc = await Scan(scanAction);
 
-                    //await Task.WhenAll(pc1);
+                    r.Clouds[action_key] = pc;
                 }
 
                 //pulse next pin
-                if (IsAuto && !UseRobotIO && idx == 1) { await _plc?.Client?.PulseDOBit(OutputPin.NEXT, 500); }
+                if (IsAuto && !UseRobotIO) { await _plc?.Client?.PulseDOBit(OutputPin.NEXT, 1500); }
 
                 //display
-                AsyncInvoke(delegate
-                {
+
+                AsyncInvoke(delegate {
                     var sv = sv_Main.GetViewer();
                     sv[$"DOOR/{action_key}"].UpdateObject(pc.Decimate(Global.Setting.DecimationStep), Color.Gray);
                     sv.Render();
@@ -224,34 +215,27 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 //Finish scan => compute result 
                 if (idx == 2)
                 {
+                    //CALCUCLATE REGISTRATION
+                    var reg = m.RegDict[key];
+                    Pointcloud door_scene = manual_load
+                        ? pc
+                        : Pointcloud.Combine(r.Clouds[Global.KEY_DOOR1], r.Clouds[Global.KEY_DOOR2]);
 
-                    Pointcloud door_scene = null;
+                    //align but dont check limit because we are in WC
+                    var res = m.RegDict[key].Align(scene: door_scene,initial_matrix: null,check_limit: false);
+                    if (res == null)
+                        throw new Exception($"[{key}] Result is NULL!");
+                    //var res = reg.Align(scene: door_scene, initial_matrix: null, check_limit: false)
+                    //?? throw new Exception($"[{key}] Registration result is NULL!");
 
-                    if (manual_load && idx == 2)
-                    {
-                        door_scene = pc;
-                    }
-                    else
-                    {
-                        //combine scene
-                        Logger.Log($"Processing ({action_key})...");
-                        var scanAction = Global.ScanActionDict[action_key];
-                        pc2 = await Scan(scanAction);
-
-                        pc = Pointcloud.Combine(pc1, pc2);
-
-                        door_scene = pc;
+                    r.RegResults[key] = res;
 
 
-                    }
-
-
-                    if (!r.Matrices.TryGetValue("H_body_wc", out var H_body_wc)) throw new Exception("H_body_wc matrix does not exist=> Use identity matrix!");
+                    //if (!r.Matrices.TryGetValue("H_door_wc", out var H_door_wc)) throw new Exception("H_body_wc matrix does not exist=> Use identity matrix!");
+                    //if (!r.Matrices.TryGetValue("H_door_wc", out var H_door_wc)) throw new Exception("H_door_wc matrix does not exist=> Use identity matrix!");
 
                     //CALCUCLATE REGISTRATION
                     //align but dont check limit because we are in WC
-                    var res = m.RegDict[key].Align(scene: door_scene, initial_matrix: H_body_wc, check_limit: false);
-                    if (res == null) throw new Exception($"[{key}] Result is NULL!");
 
                     //res.SceneImgs = new LotusAPI.MV.Image[] { door1_scene.ShadeImage, door2_scene.ShadeImage };
 
