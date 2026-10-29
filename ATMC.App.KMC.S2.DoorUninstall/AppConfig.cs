@@ -513,9 +513,25 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     var scanAction2 = Global.ScanActionDict[action_key_hanger2];
                     var scanAction3 = Global.ScanActionDict[action_key_hanger3];
 
+                    //개별 촬영로직
+                    /*
+                    var t1 =  await Scan(scanAction1);
+                    var t2 =  await Scan(scanAction2);
+                    var t3 = await Scan(scanAction3);
+
+                    //await Task.WhenAll(t1, t2, t3);
+                    var pc1 = t1 ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
+                    var pc2 = t2 ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
+                    var pc3 = t3 ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
+                    */
+
+
+
                     var t1 = Task.Run(async delegate { return await Scan(scanAction1); });
                     var t2 = Task.Run(async delegate { return await Scan(scanAction2); });
                     var t3 = Task.Run(async delegate { return await Scan(scanAction3); });
+                 
+
                     await Task.WhenAll(t1, t2, t3);
                     var pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
                     var pc2 = t2.Result ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
@@ -652,6 +668,18 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     var scanAction1 = Global.ScanActionDict[action_key1];
                     var scanAction2 = Global.ScanActionDict[action_key2];
                     var scanAction3 = Global.ScanActionDict[action_key3];
+
+                    //개별 촬영로직
+                    /*
+                    var t1 =  await Scan(scanAction1);
+                    var t2 =  await Scan(scanAction2);
+                    var t3 = await Scan(scanAction3);
+
+                    //await Task.WhenAll(t1, t2, t3);
+                    var pc1 = t1 ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
+                    var pc2 = t2 ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
+                    var pc3 = t3 ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
+                    */
 
                     var t1 = Task.Run(async delegate { return await Scan(scanAction1); });
                     var t2 = Task.Run(async delegate { return await Scan(scanAction2); });
