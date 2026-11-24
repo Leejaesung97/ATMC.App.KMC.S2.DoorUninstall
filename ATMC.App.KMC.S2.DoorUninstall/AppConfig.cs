@@ -127,14 +127,13 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
         public static void InitActions() {
             // main scans
-            ScanDef Scan_S1R1 = new ScanDef($"S1+R1->WC");//도어
-            ScanDef Scan_S1R2 = new ScanDef($"S1+R2->WC");//바디
+            ScanDef Scan_S1R1 = new ScanDef($"S1+R1->WC");//도어및 바디
             ScanDef Scan_S2R2 = new ScanDef($"S2+R2->WC");//행거
             ScanDef Scan_S3R2 = new ScanDef($"S3+R2->WC");//행거
             ScanDef Scan_S4R2 = new ScanDef($"S4+R2->WC");//행거
 
             ScanActionList = new List<ScanAction> {
-                new ScanAction(KEY_BODY, Scan_S1R2),
+                new ScanAction(KEY_BODY, Scan_S1R1),
                 new ScanAction(KEY_DOOR1, Scan_S1R1),
                 new ScanAction(KEY_DOOR2, Scan_S1R1),
                 new ScanAction(KEY_HANGER1, Scan_S2R2),
@@ -277,8 +276,11 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                 if (!res.OK) throw new Exception("Result is NG!");
 
                 //send to robot
+                // 여는 로봇 및 너트러너 로봇 둘다 shift를 보내도록 함
+                if (!await SendRobotShift(Global.R1, H_r1, Global.Setting.UF_BODY))
+                    throw new Exception($"Failed to send robot shift to {Global.R1}");//너트러너 로봇
                 if (!await SendRobotShift(Global.R2, H_r2, Global.Setting.UF_BODY))
-                    throw new Exception($"Failed to send robot shift to {Global.R2}");
+                    throw new Exception($"Failed to send robot shift to {Global.R2}");// 여는 로봇
 
                 //set PLC OK/NG
                 if (IsAuto) await Set_OK(signal);
