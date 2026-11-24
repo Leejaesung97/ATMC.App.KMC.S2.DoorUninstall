@@ -19,6 +19,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
     [TypeConverter(typeof(AbeoTypeConverter))]
     public class ModelConfig : ModelConfigBase {
         [Category("REGISTRATION")]
+        public FastRegistrationConfig BodyReg { get; set; } = new FastRegistrationConfig();
+        [Category("REGISTRATION")]
         public FastRegistrationConfig DoorReg { get; set; } = new FastRegistrationConfig();
 
         [Category("REGISTRATION")]
@@ -48,6 +50,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         //Define registration keys
         internal Dictionary<string, FastRegistrationConfig> RegDict => new Dictionary<string, FastRegistrationConfig> {
             // main registration configs
+            { Global.KEY_BODY, BodyReg},
             { Global.KEY_DOOR, DoorReg},
             //{ Global.KEY_DOOR2, DoorReg},
             { Global.KEY_HINGE, HingeReg},

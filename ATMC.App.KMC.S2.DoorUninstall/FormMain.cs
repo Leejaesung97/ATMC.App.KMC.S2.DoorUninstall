@@ -761,6 +761,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     var vc = this.sv_Main;
                     var sv = vc.GetViewer();
                     FlyTo("org");
+                    sv["BODY/CAD"].UpdateObject(_cycle?.GetModel()?.BodyReg?.CadModel, Color.FromArgb(Global.Setting.CadModelOpacity, Color.Gray));
                     sv["DOOR1/CAD"].UpdateObject(_cycle?.GetModel()?.DoorReg?.CadModel, Color.FromArgb(Global.Setting.CadModelOpacity, Color.Gray));
                     sv["DOOR2/CAD"].UpdateObject(_cycle?.GetModel()?.DoorReg?.CadModel, Color.FromArgb(Global.Setting.CadModelOpacity, Color.Gray));
                     //sv["HINGE/CAD"].UpdateObject(_cycle?.GetModel()?.HingeReg?.CadModel, Color.FromArgb(Global.Setting.CadModelOpacity, Color.Gray));
@@ -838,6 +839,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
             var GetResult = new Func<string, (string, RegistrationResult)>(key => (key, r?.GetResultOrDefault(key)));
 
             var tbl1 = WebUtils.GetResultTable("RESULT", new (string, RegistrationResult)[]{
+                GetResult(Global.KEY_BODY),
                 GetResult(Global.KEY_DOOR),
                 //GetResult(Global.KEY_DOOR2),
                 GetResult(Global.KEY_HINGE),
@@ -858,6 +860,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         {
             //Reset PLC output
             await _plc.Client.ClearDOBits(new List<Enum> {
+                    OutputPin.BODY_OK, OutputPin.BODY_NG,
                     OutputPin.DOOR_OK, OutputPin.DOOR_NG,
                     OutputPin.NEXT,
                     OutputPin.HANGER_OK, OutputPin.HANGER_NG,

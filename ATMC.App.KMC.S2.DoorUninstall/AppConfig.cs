@@ -33,9 +33,11 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
         public Property_<float> NullToolTolerance { get; } = new Property_<float>(10.0f, "ROBOT", WriteProtectionType.AskForPermission);
         //public Property_<int> UFVarIdx { get; } = new Property_<int>(11, "ROBOT", WriteProtectionType.AskForPermission);
+        
         public Property_<int> UF_DOOR { get; } = new Property_<int>(10, "ROBOT", WriteProtectionType.AskForPermission);
         public Property_<int> UF_HINGE { get; } = new Property_<int>(11, "ROBOT", WriteProtectionType.AskForPermission);
         public Property_<int> UF_HANGER { get; } = new Property_<int>(12, "ROBOT", WriteProtectionType.AskForPermission);
+        public Property_<int> UF_BODY { get; } = new Property_<int>(13, "ROBOT", WriteProtectionType.AskForPermission);
         public Property_<int> DataSendTryCount { get; } = new Property_<int>(3, "ROBOT", WriteProtectionType.AskForPermission);
 
         //PROFILERS
@@ -52,8 +54,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
     //================================================
     // Define INPUT / OUTPUT /MEMORY BLOCKS
     //================================================
-    public enum OutputPin { START_COMPL,NEXT, DOOR_OK, DOOR_NG, HANGER_OK, HANGER_NG, HOLDER_OK, HOLDER_NG, PCRUN, HW_ERR, AUTO } 
-    public enum InputPin { RESET, START, DOOR1, DOOR2, HANGER, HOLDER, END }
+    public enum OutputPin { START_COMPL,NEXT, BODY_OK,BODY_NG, DOOR_OK, DOOR_NG, HANGER_OK, HANGER_NG, HOLDER_OK, HOLDER_NG, PCRUN, HW_ERR, AUTO } 
+    public enum InputPin { RESET, START, BODY, DOOR1, DOOR2, HANGER, HOLDER, END }
     public enum PlcBlock { CAR_TYPE, BODY_NO, SEQ_NO, HW_ERRCODE, PCRUN }
 
     //================================================
@@ -78,7 +80,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         public const string R1 = "R1";// S1 로봇 너트러너 장착
         public const string R2 = "R2";// 도어 안착 로봇
         // main scans
-        public const string S1 = "S1";// 도어 촬영
+        public const string S1 = "S1";// 도어 촬영및 바디 촬영
         public const string S2 = "S2";//행거 촬영 
         public const string S3 = "S3";//행거 촬영
         public const string S4 = "S4";//행거 촬영
@@ -87,6 +89,8 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         public const string WC_to_R2 = "WC->R2";
 
         //registration keys
+
+        public const string KEY_BODY = "body";
 
         public const string KEY_DOOR = "door";
         public const string KEY_DOOR1 = KEY_DOOR + "1";
@@ -123,12 +127,14 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
         public static void InitActions() {
             // main scans
-            ScanDef Scan_S1R1 = new ScanDef($"S1+R1->WC"); 
-            ScanDef Scan_S2R2 = new ScanDef($"S2+R2->WC");
-            ScanDef Scan_S3R2 = new ScanDef($"S3+R2->WC");
-            ScanDef Scan_S4R2 = new ScanDef($"S4+R2->WC");
+            ScanDef Scan_S1R1 = new ScanDef($"S1+R1->WC");//도어
+            ScanDef Scan_S1R2 = new ScanDef($"S1+R2->WC");//바디
+            ScanDef Scan_S2R2 = new ScanDef($"S2+R2->WC");//행거
+            ScanDef Scan_S3R2 = new ScanDef($"S3+R2->WC");//행거
+            ScanDef Scan_S4R2 = new ScanDef($"S4+R2->WC");//행거
 
             ScanActionList = new List<ScanAction> {
+                new ScanAction(KEY_BODY, Scan_S1R2),
                 new ScanAction(KEY_DOOR1, Scan_S1R1),
                 new ScanAction(KEY_DOOR2, Scan_S1R1),
                 new ScanAction(KEY_HANGER1, Scan_S2R2),
@@ -147,7 +153,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
 
             ScanActionGroups = new List<ScanActionGroup> { 
                 // main scans
-               
+               new ScanActionGroup(name:KEY_BODY,actions:ScanActionDict.GetActionList(KEY_BODY),combine:true),
                 new ScanActionGroup(name:KEY_DOOR,actions:ScanActionDict.GetActionList(KEY_DOOR1,KEY_DOOR2),combine:true),
                 new ScanActionGroup(name:KEY_HANGER, actions:ScanActionDict.GetActionList(KEY_HANGER1,KEY_HANGER2,KEY_HANGER3),combine:true),
                 new ScanActionGroup(name:KEY_HOLDER, actions:ScanActionDict.GetActionList(KEY_HOLDER1,KEY_HOLDER2,KEY_HOLDER3),combine:true),
@@ -160,7 +166,130 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
     // MAIN WORK FLOW
     //================================================
     public partial class FormMain {
+        async Task DO_BODY_SCAN()
+        {
+            bool manual_load = IsManual && ModifierKeys == Keys.Alt;
+            string key;
+            string signal = "BODY"; //just OK,NG // Check always if we use different signals
+            string action_key;
 
+            key = Global.KEY_BODY;
+            action_key = Global.KEY_BODY;
+     
+           
+
+            await dashboard.SetResultTag(0, key, "..."); //processing
+            FlyTo(key); //fly to view name = install
+
+            try
+            {
+                //reset PLC Output in auto mode at first scan
+                if (IsAuto) { await Clear_OKNG(signal); }
+
+                var r = _cycle.GetResult();
+                var m = _cycle.GetModel();
+
+                Pointcloud scene = null;
+
+                LotusAPI.MV.Image ShadeImage1 = null;
+
+                // Scan
+                if (manual_load)
+                {
+                    Global.MainForm.Invoke(new Action(delegate
+                    {
+                        scene = new Pointcloud(LotusAPI.DialogUtils.OpenPLYFile("Open scene file"));
+                    }));
+                }
+                else
+                {
+                    //Scan
+                    Logger.Log($"Processing ({key})...");
+                    var scanAction1 = Global.ScanActionDict[action_key];
+
+                    var t1 = Task.Run(async delegate { return await Scan(scanAction1); });
+                    await Task.WhenAll(t1);
+
+                    var pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
+
+                    //keep the original scan for diagnostics even when aligment fails
+                    r.Clouds[action_key] = pc1;
+
+                    ShadeImage1 = pc1.ShadeImage;
+
+                    scene = Pointcloud.Combine(pc1);
+                }
+                //display
+                AsyncInvoke(delegate
+                {
+                    var sv = sv_Main.GetViewer();
+                    sv[$"BODY/{key}"].UpdateObject(scene.Decimate(Global.Setting.DecimationStep), Color.Gray);
+                    sv.Render();
+                });
+
+                //Finish scan => compute result 
+                //CALCUCLATE REGISTRATION
+                var reg = m.RegDict[key];
+
+                //align but dont check limit because we are in WC
+                var res = reg.Align(scene: scene, initial_matrix: null, check_limit: false)
+                    ?? throw new Exception($"[{key}] Registration result is NULL!");
+
+                res.SceneImgs = new LotusAPI.MV.Image[] { ShadeImage1 };
+                r.RegResults[key] = res;
+
+                //var H_wc = res.Matrix;
+                //var H_r1 = Global.WorkCell.Graph.ChangeBasis(Global.WC_to_R1, H_wc);
+                //var H_r2 = Global.WorkCell.Graph.ChangeBasis(Global.WC_to_R2, H_wc);
+                //var H_cen = Global.WorkCell.Graph.ChangeBasis(H_wc, reg.Model.Center);
+
+                //compute matrices
+                //body use only translation shift
+                var p0 = reg.Model.Center;
+                var p1 = res.Aligned.Center;
+                var H_wc = LotusAPI.Math.Utils.Trans4((p1 - p0).ToVector3d());
+                Logger.Log($"{key}: {new RobotPose(res.Matrix)}");
+                var H_r1 = Global.WorkCell.Graph.ChangeBasis("WC->R1", H_wc);
+                var H_r2 = Global.WorkCell.Graph.ChangeBasis("WC->R2", H_wc);
+                var H_cen = Global.WorkCell.Graph.ChangeBasis(H_wc, reg.Model.Center);
+                r.Matrices[$"H_body_wc"] = H_wc;
+                r.Matrices[$"H_body_r1"] = H_r1;
+                r.Matrices[$"H_body_r2"] = H_r2;
+                r.Matrices[$"H_body_cen"] = H_cen;
+
+                //check limit with centered shift
+                res.LimitMatrix = H_cen;
+                res.CheckLimit();
+
+                //display 3D
+                AsyncInvoke(delegate
+                {
+                    //cloud view
+                    var sv = sv_Main.GetViewer();
+                    sv[$"BODY/{key}_aligned"].UpdateObject(res.Aligned, res.OK ? Global.ColorOK : Global.ColorNG);
+                    sv[$"BODY/CAD"].Matrix = H_wc;
+                    sv.Render();
+                });
+                //update result table
+                await UpdateResultView();
+
+                //check OK
+                if (!res.OK) throw new Exception("Result is NG!");
+
+                //send to robot
+                if (!await SendRobotShift(Global.R2, H_r2, Global.Setting.UF_BODY))
+                    throw new Exception($"Failed to send robot shift to {Global.R2}");
+
+                //set PLC OK/NG
+                if (IsAuto) await Set_OK(signal);
+            }
+            catch (Exception ex)
+            {
+                LotusAPI.Logger.Error(ex.Message);
+                LotusAPI.Logger.Trace(ex.StackTrace);
+                if (IsAuto) await Set_NG(signal);
+            }
+        }
         async Task DO_DOOR_SCAN(int idx)
         {
             bool manual_load = IsManual && ModifierKeys == Keys.Alt;
@@ -885,6 +1014,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     case InputPin.END: _tq.Enqueue(DO_END); break;
 
                     // main scan signals
+                    case InputPin.BODY: _tq.Enqueue(async () => await DO_BODY_SCAN()); break;
                     case InputPin.DOOR1: _tq.Enqueue(async () => await DO_DOOR_SCAN(1)); break;
                     case InputPin.DOOR2: _tq.Enqueue(async () => await DO_DOOR_SCAN(2)); break;
                     case InputPin.HANGER: _tq.Enqueue(async () => await DO_HANGER_SCAN()); break;
@@ -903,6 +1033,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         {
             MessageBuilder mb = new MessageBuilder();
             mb.Set("groups", new Json[] {
+                 new Json(){ ["title"]= "BODY", ["actions"] = new Enum[] { InputPin.BODY} },
                 new Json(){ ["title"]= "DOOR", ["actions"] = new Enum[] { InputPin.DOOR1, InputPin.DOOR2 } },
                 new Json(){ ["title"]= "HANGER", ["actions"] = new Enum[] { InputPin.HANGER}},
                 new Json(){ ["title"]= "HOLDER", ["actions"] = new Enum[] { InputPin.HOLDER} },
