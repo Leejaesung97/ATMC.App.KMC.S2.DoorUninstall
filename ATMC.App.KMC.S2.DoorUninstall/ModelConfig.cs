@@ -67,6 +67,7 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
             try {
                 //make sure registration is not null
                 // main registration configs
+                BodyReg = BodyReg ?? new FastRegistrationConfig();
                 DoorReg = DoorReg ?? new FastRegistrationConfig();
                 HingeReg = HingeReg ?? new FastRegistrationConfig();
                 //Hinge2Reg = Hinge2Reg ?? new FastRegistrationConfig();
