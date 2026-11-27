@@ -818,21 +818,32 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     var pc3 = t3 ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
                     */
 
-                    var t1 = Task.Run(async delegate { return await Scan(scanAction1); });
-                    var t2 = Task.Run(async delegate { return await Scan(scanAction2); });
-                    var t3 = Task.Run(async delegate { return await Scan(scanAction3); });
+                    Task<Pointcloud> t1 = null;
+                    Task<Pointcloud> t2 = null;
+                    Task<Pointcloud> t3 = null;
 
-                    await Task.WhenAll(t1, t2,t3);
 
-                    var pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
-                    var pc2 = t2.Result ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
-                    var pc3 = t3.Result ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
+                    var tasks = new List<Task>();
+
+                    if (m.Use_Scan1) { t1 = Task.Run(async delegate { return await Scan(scanAction1); }); tasks.Add(t1); }
+                    if (m.Use_Scan2) { t2 = Task.Run(async delegate { return await Scan(scanAction2); }); tasks.Add(t2); }
+                    if (m.Use_Scan3) { t3 = Task.Run(async delegate { return await Scan(scanAction3); }); tasks.Add(t3); }
+
+
+                    await Task.WhenAll(tasks);
+
+                    Pointcloud pc1 = null, pc2 = null, pc3 = null;
+
+                    if (m.Use_Scan1) pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
+                    if (m.Use_Scan2) pc2 = t2.Result ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
+                    if (m.Use_Scan3) pc3 = t3.Result ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
 
                     //keep both raw scans before alignment so an align failure is tracable
-                    r.Clouds[action_key1] = pc1;
-                    r.Clouds[action_key2] = pc2;
-                    r.Clouds[action_key3] = pc3;
-                    
+                    if (pc1 != null) r.Clouds[action_key1] = pc1;
+                    if (pc2 != null) r.Clouds[action_key2] = pc2;
+                    if (pc3 != null) r.Clouds[action_key3] = pc3;
+
+
                     scene = Pointcloud.Combine(pc1, pc2,pc3);
                 }
 
