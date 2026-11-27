@@ -45,6 +45,16 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         public ValueRange P4Range { get; set; } = new ValueRange(-5, 5);
         [Category("HOLDER")]
         public ValueRange SliderRange { get; set; } = new ValueRange(-5, 5);
+
+
+
+        [Category("USE_HANGER")]
+        public bool Use_Scan1 { get; set; } = true;
+        [Category("USE_HANGER")]
+        public bool Use_Scan2 { get; set; } = true;
+
+        [Category("USE_HANGER")]
+        public bool Use_Scan3 { get; set; } = false;
         //TODO: add more registration configs if needed 
 
         //Define registration keys

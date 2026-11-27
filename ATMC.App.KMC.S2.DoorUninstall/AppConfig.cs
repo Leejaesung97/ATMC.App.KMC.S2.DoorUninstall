@@ -128,21 +128,21 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
         public static void InitActions() {
             // main scans
             ScanDef Scan_S1R1 = new ScanDef($"S1+R1->WC");//도어및 바디
-            ScanDef Scan_S2R2 = new ScanDef($"S2+R2->WC");//행거
-            ScanDef Scan_S3R2 = new ScanDef($"S3+R2->WC");//행거
-            ScanDef Scan_S4R2 = new ScanDef($"S4+R2->WC");//행거
+            ScanDef Scan_S2R1 = new ScanDef($"S2+R1->WC");//행거
+            ScanDef Scan_S3R1 = new ScanDef($"S3+R1->WC");//행거
+            ScanDef Scan_S4R1 = new ScanDef($"S4+R1->WC");//행거
 
             ScanActionList = new List<ScanAction> {
                 new ScanAction(KEY_BODY, Scan_S1R1),
                 new ScanAction(KEY_DOOR1, Scan_S1R1),
                 new ScanAction(KEY_DOOR2, Scan_S1R1),
-                new ScanAction(KEY_HANGER1, Scan_S2R2),
-                new ScanAction(KEY_HANGER2, Scan_S3R2),
-                new ScanAction(KEY_HANGER3, Scan_S4R2),
+                new ScanAction(KEY_HANGER1, Scan_S2R1),
+                new ScanAction(KEY_HANGER2, Scan_S3R1),
+                new ScanAction(KEY_HANGER3, Scan_S4R1),
 
-                new ScanAction(KEY_HOLDER1, Scan_S2R2),
-                new ScanAction(KEY_HOLDER2, Scan_S3R2),
-                new ScanAction(KEY_HOLDER3, Scan_S4R2),
+                new ScanAction(KEY_HOLDER1, Scan_S2R1),
+                new ScanAction(KEY_HOLDER2, Scan_S3R1),
+                new ScanAction(KEY_HOLDER3, Scan_S4R1),
 
                 
 
@@ -655,24 +655,30 @@ namespace ATMC.App.KMC.S2.DoorUninstall {
                     var pc2 = t2 ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
                     var pc3 = t3 ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
                     */
+                    Task<Pointcloud> t1 = null;
+                    Task<Pointcloud> t2 = null;
+                    Task<Pointcloud> t3 = null;
 
 
+                    var tasks = new List<Task>();
 
-                    var t1 = Task.Run(async delegate { return await Scan(scanAction1); });
-                    var t2 = Task.Run(async delegate { return await Scan(scanAction2); });
-                    var t3 = Task.Run(async delegate { return await Scan(scanAction3); });
-                 
+                    if (m.Use_Scan1) { t1 = Task.Run(async delegate { return await Scan(scanAction1); }); tasks.Add(t1); }
+                    if (m.Use_Scan2) { t2 = Task.Run(async delegate { return await Scan(scanAction2); }); tasks.Add(t2); }
+                    if (m.Use_Scan3) { t3 = Task.Run(async delegate { return await Scan(scanAction3); }); tasks.Add(t3); }
 
-                    await Task.WhenAll(t1, t2, t3);
-                    var pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
-                    var pc2 = t2.Result ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
-                    var pc3 = t3.Result ?? throw new Exception($"Failed to scan ({scanAction3.Name})"); 
+
+                    await Task.WhenAll(tasks);
+
+                    Pointcloud pc1 = null, pc2 = null, pc3 = null;
+
+                    if (m.Use_Scan1) pc1 = t1.Result ?? throw new Exception($"Failed to scan ({scanAction1.Name})");
+                    if (m.Use_Scan2) pc2 = t2.Result ?? throw new Exception($"Failed to scan ({scanAction2.Name})");
+                    if (m.Use_Scan3) pc3 = t3.Result ?? throw new Exception($"Failed to scan ({scanAction3.Name})");
 
                     //keep both raw scans before alignment so an align failure is tracable
-                    r.Clouds[action_key_hanger1] = pc1;
-                    r.Clouds[action_key_hanger2] = pc2;
-                    r.Clouds[action_key_hanger3] = pc3;
-
+                    if (pc1 != null) r.Clouds[action_key_hanger1] = pc1;
+                    if (pc2 != null) r.Clouds[action_key_hanger2] = pc2;
+                    if (pc3 != null) r.Clouds[action_key_hanger3] = pc3;
 
 
                     scene = Pointcloud.Combine(pc1, pc2, pc3);
